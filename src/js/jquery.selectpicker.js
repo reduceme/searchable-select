@@ -249,7 +249,6 @@
             };
         },
         debounceFilter: function () {
-            console.log('test');
             if (this.options.filterable) {
                 this.remoteSearch();
             }
