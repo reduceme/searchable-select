@@ -61,14 +61,19 @@
                 _this.hide();
             }
         });
+        var action = this.debounce(_this.debounceFilter, _this, 1000);
 
-        this.input.on('keyup', function (event) {
+        // var action = this.throttle(doInput, 1000);
+        // $('#txt').on('keyup', action);
+
+        /*this.input.on('keyup', function (event) {
             //判断是否启用后台搜索
             if (_this.options.filterable) {
-                _this.remoteSearch()
+                _this.remoteSearch();
             }
             _this.filter();
-        })
+        });*/
+        this.input.on('keyup', action)
     };
     var $sp = $.selectpicker;
     $sp.fn = $sp.prototype;
@@ -230,6 +235,25 @@
                 this.options.data.page--;
                 this.remoteSearch();
             }
+        },
+        //去抖动
+        debounce: function (action, _this, time) {
+            var timer = null;
+            return function() {
+                var args = arguments;
+
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    action.apply(_this, args);
+                }, time);
+            };
+        },
+        debounceFilter: function () {
+            console.log('test');
+            if (this.options.filterable) {
+                this.remoteSearch();
+            }
+            this.filter();
         }
     });
     $.fn.selectpicker = function (options) {
