@@ -26,3 +26,6 @@
 3. 调用`buildItems()`，构造`select`的`option`选项，并为每个`option`绑定点击事件`selectItem()`——点击之后赋值并隐藏下拉框
 4. `selectItem()`，为避免用户点击的是本来就是选中项，导致重复添加选中的`class`，所以每次点击之前都把`selected`移除，然后为原始的`select`绑定`value`，为新建的`select`绑定值。
 5. 过滤方法：利用`jquery`的自定义过滤方法（自定义伪类选择器）`$.expr[":"]$.expr[":"].searchableSelectContains = $.expr.createPseudo(function (arg) {})`，在`filter()`里，让每一个`option`隐藏，再调用自定义的伪类选择器
+
+### 单元测试
+未写单元测试

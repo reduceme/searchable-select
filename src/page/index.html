@@ -214,7 +214,7 @@
     <option value="Zambia">Zambia</option>
     <option value="Zimbabwe">Zimbabwe</option>
 </select>
-
+<button id="getValueBtn">获取选中的值</button>
 <br/>
 <br/>
 
@@ -241,6 +241,10 @@
             methods: 'post'
         });
         $('#selectpicker').selectpicker();
+
+        $('#getValueBtn').on('click', function () {
+            alert($('#selectpicker').val())
+        })
     })
 </script>
 </body>

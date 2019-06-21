@@ -1,4 +1,5 @@
 ;(function ($) {
+    //自定义的伪类选择器
     $.expr[":"].searchableSelectContains = $.expr.createPseudo(function (arg) {
         /* obj - is a current DOM element
            index - the current loop index in stack
@@ -7,6 +8,8 @@
 
            Return true to include current element
            Return false to explude current element
+
+           https://github.com/jquery/sizzle/wiki#extension-api
         */
         return function (elem) {
             var reg = new RegExp(arg, 'gim');
