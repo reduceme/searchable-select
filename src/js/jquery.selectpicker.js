@@ -12,7 +12,9 @@
             var reg = new RegExp(arg, 'gim');
             var isMatch = $(elem).text().toUpperCase().indexOf(arg.toUpperCase());
             if (isMatch >= 0) {
-                $(elem).html($(elem).text().replace(reg, '<span style="color:red;">$&</span>'));
+                arg === ''
+                    ? $(elem).html($(elem).text())
+                    : $(elem).html($(elem).text().replace(reg, '<span style="color:red;">$&</span>'));
             }
             return isMatch >= 0;
         };
@@ -213,12 +215,15 @@
                 }
             })
         },
+        //翻页
         pageTurn: function (isNext) {
             if (isNext && this.options.data.page < this.options.totalPage) {
                 this.options.data.page++;
                 this.remoteSearch()
             }
-            if (!isNext && this.options.data.page < this.options.totalPage && this.options.data.page > 0) {
+            if (!isNext
+                && this.options.data.page < this.options.totalPage
+                && this.options.data.page > 0) {
                 this.options.data.page--;
                 this.remoteSearch();
             }
