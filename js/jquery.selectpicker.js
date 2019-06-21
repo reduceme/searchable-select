@@ -61,9 +61,8 @@
             //判断是否启用后台搜索
             if (_this.options.filterable) {
                 _this.remoteSearch()
-            } else {
-                _this.filter();
             }
+            _this.filter();
         })
     };
     var $sp = $.selectpicker;
@@ -133,16 +132,21 @@
             this.element.find('option').each(function () {
                 var item = $('<div class="searchable-select-item" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>');
 
-                item.on('click', function (event) {
+                /*item.on('click', function (event) {
                     event.stopPropagation();
                     _this.selectItem($(this));
                     _this.hide();
-                });
+                });*/
                 if (this.selected) {
                     _this.selectItem(item)
                 }
                 _this.items.append(item);
             });
+            this.items.on('click', '.searchable-select-item', function (event) {
+                event.stopPropagation();
+                _this.selectItem($(this));
+                _this.hide();
+            })
         },
         //设置选中的状态
         selectItem: function (item) {
@@ -202,7 +206,6 @@
                         this.element.html(html);
                         this.buildItems();
                         this.options.totalPage = data.totalPage;
-                        this.filter();
                     }
                 },
                 error: function (err) {
