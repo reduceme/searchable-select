@@ -19,7 +19,26 @@
     });
     $.selectpicker = function (element, options) {
         this.element = element;
-        this.options = options || {};
+        //默认参数
+        var defaults = {
+            //是否启用远程搜索
+            filterable: false,
+            //搜索的url
+            url: '',
+            //发送的参数
+            data: {
+                searchContent: '',
+                //当前分页
+                page: 1,
+                //每页的数量
+                limit: 100
+            },
+            //请求方法
+            methods: 'post',
+            totalPage: 0
+        };
+        this.options = $.extend({}, defaults, options);
+
         this.init();
 
         var _this = this;
@@ -38,7 +57,12 @@
         });
 
         this.input.on('keyup', function (event) {
-            _this.filter();
+            //判断是否启用后台搜索
+            if (_this.options.filterable) {
+                _this.remoteSearch()
+            } else {
+                _this.filter();
+            }
         })
     };
     var $sp = $.selectpicker;
@@ -47,6 +71,7 @@
     $sp.fn.extend({
         // 初始化
         init: function () {
+            var _this = this;
             //隐藏原来的select
             this.element.hide();
             //存储当前的状态
@@ -66,21 +91,44 @@
             //每一条选项
             this.items = $('<div class="searchable-select-items"></div>');
 
+            //上一页
+            this.hasPrivious = $('<div class="searchable-has-privious searchable-select-hide">上一页</div>');
+            //下一页
+            this.hasNext = $('<div class="searchable-has-next searchable-select-hide">下一页</div>');
+
             //构造select
             this.dropdown.append(this.input);
             this.dropdown.append(this.scrollPart);
+
+            this.scrollPart.append(this.hasPrivious);
             this.scrollPart.append(this.items);
+            this.scrollPart.append(this.hasNext);
+
             this.searchableElement.append(this.caret);
             this.searchableElement.append(this.holder);
             this.searchableElement.append(this.dropdown);
 
+            //启用远程搜索，给上一页、下一页绑定翻页事件
+            if (this.options.filterable) {
+                this.hasPrivious.removeClass('searchable-select-hide');
+                this.hasNext.removeClass('searchable-select-hide');
+                this.hasPrivious.on('click', function () {
+                    _this.pageTurn(false);
+                });
+
+                this.hasNext.on('click', function () {
+                    _this.pageTurn(true);
+                });
+            }
+
             this.buildItems();
             //把新构建的select插入
-            this.element.after(this.searchableElement)
+            this.element.after(this.searchableElement);
         },
         //构造选项
         buildItems: function () {
             var _this = this;
+            this.items.empty();
             this.element.find('option').each(function () {
                 var item = $('<div class="searchable-select-item" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>');
 
@@ -126,11 +174,50 @@
             this.dropdown.addClass('searchable-select-hide');
             this.status = 'hide';
         },
-        //搜索匹配项目
+        //前端搜索匹配项目
         filter: function () {
             var text = this.input.val();
             this.items.find('.searchable-select-item').addClass('searchable-select-hide');
             this.items.find('.searchable-select-item:searchableSelectContains(' + text + ')').removeClass('searchable-select-hide');
+        },
+        //后台搜索匹配项目
+        remoteSearch: function () {
+            $.ajax({
+                methods: this.options.methods,
+                url: this.options.url,
+                data: {
+                    searchContent: this.input.val(),
+                    page: this.options.data.page,
+                    limit: this.options.data.limit
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var html = '';
+                        for (var i = 0, len = data.data.length; i < len; i++) {
+                            html += '<option value="' +
+                                data.data[i].key + '">' +
+                                data.data[i].value + '</option>';
+                        }
+                        this.element.html(html);
+                        this.buildItems();
+                        this.options.totalPage = data.totalPage;
+                        this.filter();
+                    }
+                },
+                error: function (err) {
+                    console.log(err.statusText)
+                }
+            })
+        },
+        pageTurn: function (isNext) {
+            if (isNext && this.options.data.page < this.options.totalPage) {
+                this.options.data.page++;
+                this.remoteSearch()
+            }
+            if (!isNext && this.options.data.page < this.options.totalPage && this.options.data.page > 0) {
+                this.options.data.page--;
+                this.remoteSearch();
+            }
         }
     });
     $.fn.selectpicker = function (options) {

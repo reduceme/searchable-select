@@ -43,6 +43,7 @@
     border-top: none;
     left: 0;
     right: 0;
+    z-index: 1;
 }
 
 .searchable-select-input {
@@ -87,4 +88,22 @@
 .searchable-select-item.selected {
     background: #28a4c9;
     color: white;
+}
+
+.searchable-has-privious {
+    top: 0;
+}
+
+.searchable-has-next {
+    bottom: 0;
+}
+
+.searchable-has-privious, .searchable-has-next {
+    height: 16px;
+    text-align: center;
+    z-index: 10;
+    background-color: white;
+    padding: 5px 0;
+    line-height: 16px;
+    cursor: pointer;
 }

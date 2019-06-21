@@ -8,6 +8,15 @@
     <script src="../js/jquery.selectpicker.js"></script>
 </head>
 <body>
+<p>大量数据时，需要后台配合，写出查询接口，每次返回数据再进行渲染</p>
+<select id="remoteSearch" class="selectpicker">
+    <option selected value="BlackBerry">BlackBerry</option>
+    <option value="device">device</option>
+    <option value="csscsscss">csscsscss</option>
+</select>
+
+<br/>
+<p>数据量较小时，可以直接渲染同时支持查询</p>
 <select id="selectpicker" class="selectpicker">
     <option selected value="BlackBerry">BlackBerry</option>
     <option value="device">device</option>
@@ -15,7 +24,22 @@
 </select>
 <script>
     $(function () {
-        $('.selectpicker').selectpicker();
+        $('#remoteSearch').selectpicker({
+            filterable: true,
+            //搜索的url
+            url: '/test-url',
+            //发送的参数
+            data: {
+                searchContent: '',
+                //当前分页
+                page: 1,
+                //每页的数量
+                limit: 100
+            },
+            //请求方法
+            methods: 'post'
+        });
+        $('#selectpicker').selectpicker();
     })
 </script>
 </body>
