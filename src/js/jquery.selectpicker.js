@@ -63,16 +63,6 @@
         });
         var action = this.debounce(_this.debounceFilter, _this, 1000);
 
-        // var action = this.throttle(doInput, 1000);
-        // $('#txt').on('keyup', action);
-
-        /*this.input.on('keyup', function (event) {
-            //判断是否启用后台搜索
-            if (_this.options.filterable) {
-                _this.remoteSearch();
-            }
-            _this.filter();
-        });*/
         this.input.on('keyup', action)
     };
     var $sp = $.selectpicker;
