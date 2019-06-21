@@ -27,6 +27,7 @@
             url: '',
             //发送的参数
             data: {
+                //input的信息
                 searchContent: '',
                 //当前分页
                 page: 1,
