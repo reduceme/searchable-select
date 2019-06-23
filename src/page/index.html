@@ -109,6 +109,8 @@
 </select>
 <script>
     $(function () {
+        $('#selectpicker').selectpicker();
+
         $('#remoteSearch').selectpicker({
             filterable: true,
             //搜索的url
@@ -123,7 +125,6 @@
             //请求方法
             methods: 'post'
         });
-        $('#selectpicker').selectpicker();
 
         $('#getValueBtn').on('click', function () {
             alert($('#selectpicker').val())

@@ -132,24 +132,23 @@
         buildItems: function () {
             var _this = this;
             this.items.empty();
+            var optionHtml = '';
+            var selectOption = undefined;
             this.element.find('option').each(function () {
-                var item = $('<div class="searchable-select-item" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>');
-
-                /*item.on('click', function (event) {
+                optionHtml += '<div class="searchable-select-item" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>';
+                //获取当前选中的option
+                if (this.selected) {
+                    selectOption = $('<div class="searchable-select-item" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>');
+                }
+            });
+            this.items
+                .html(optionHtml)
+                .on('click', '.searchable-select-item', function (event) {
                     event.stopPropagation();
                     _this.selectItem($(this));
                     _this.hide();
-                });*/
-                if (this.selected) {
-                    _this.selectItem(item)
-                }
-                _this.items.append(item);
-            });
-            this.items.on('click', '.searchable-select-item', function (event) {
-                event.stopPropagation();
-                _this.selectItem($(this));
-                _this.hide();
-            })
+                });
+            this.selectItem(selectOption);
         },
         //设置选中的状态
         selectItem: function (item) {
@@ -232,11 +231,11 @@
         //去抖动
         debounce: function (action, _this, time) {
             var timer = null;
-            return function() {
+            return function () {
                 var args = arguments;
 
                 clearTimeout(timer);
-                timer = setTimeout(function() {
+                timer = setTimeout(function () {
                     action.apply(_this, args);
                 }, time);
             };
