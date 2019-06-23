@@ -13,13 +13,16 @@
         */
         return function (elem) {
             var reg = new RegExp(arg, 'gim');
-            var isMatch = $(elem).text().toUpperCase().indexOf(arg.toUpperCase());
-            if (isMatch >= 0) {
-                arg === ''
-                    ? $(elem).html($(elem).text())
-                    : $(elem).html($(elem).text().replace(reg, '<span style="color:red;">$&</span>'));
+            if (arg === '') {
+                $(elem).html($(elem).text());
+                return true;
+            } else {
+                var isMatch = $(elem).text().toUpperCase().indexOf(arg.toUpperCase());
+                if (isMatch >= 0) {
+                    $(elem).html($(elem).text().replace(reg, '<span style="color:red;">$&</span>'));
+                }
+                return isMatch >= 0;
             }
-            return isMatch >= 0;
         };
     });
     $.selectpicker = function (element, options) {
