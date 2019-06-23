@@ -2,22 +2,23 @@
     //自定义的伪类选择器
     $.expr[":"].searchableSelectContains = $.expr.createPseudo(function (arg) {
         // https://github.com/jquery/sizzle/wiki#extension-api
-        //用于计算当键入值为空时，是否为第一次匹配
-        var isFirstMatch = true;
         var reg = new RegExp(arg, 'gim');
         return function (elem, context, isXml) {
             var element = $(elem);
             if (arg === '') {
-                if (isFirstMatch) {
-                    var hasSpan = $(context).find('.searchable-select-item .red-font');
-                    hasSpan.each(function () {
-                        var parent = $(this).parent();
-                        parent.html(parent.data('text'));
-                    });
-                    isFirstMatch = false;
+                var hasSpan = $(context)
+                    .find('.searchable-select-item .red-font');
+                /*hasSpan.each(function () {
+                    var parent = $(this).parent();
+                    parent.html(parent.data('text'));
+                });*/
+                for (var i = 0, len = hasSpan.length; i < len; i++) {
+                    var parent = $(hasSpan).eq(i).parent();
+                    parent.html(parent.data('text'));
                 }
                 return true;
-            } else {
+            }
+            {
                 var isMatch = element
                     .text()
                     .toUpperCase()
@@ -27,7 +28,6 @@
                         .html(element.text()
                             .replace(reg, '<span class="red-font" style="color:red;">$&</span>'));
                 }
-                isFirstMatch = true;
                 return isMatch >= 0;
             }
         };
@@ -141,7 +141,8 @@
             this.items.empty();
             var optionHtml = '';
             var selectOption = undefined;
-            this.element.find('option').each(function (index) {
+            var options = this.element.find('option');
+            this.element.find('option').each(function () {
                 optionHtml += '<div class="searchable-select-item" data-text="' + $(this).text() + '" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>';
                 //获取当前选中的option
                 if (this.selected) {
