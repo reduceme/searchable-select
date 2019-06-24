@@ -70,14 +70,14 @@
     background-color: #F5F5F5;
 }
 
-/*¶¨Òå¹ö¶¯Ìõ¹ìµÀ ÄÚÒõÓ°+Ô²½Ç*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ó°+Ô²ï¿½ï¿½*/
 .searchable-select-items::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: #F5F5F5;
 }
 
-/*¶¨Òå»¬¿é ÄÚÒõÓ°+Ô²½Ç*/
+/*ï¿½ï¿½ï¿½å»¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ó°+Ô²ï¿½ï¿½*/
 .searchable-select-items::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
@@ -98,7 +98,7 @@
 }
 
 .searchable-select-item.selected {
-    background: #28a4c9;
+    background: #f1572a;
     color: white;
 }
 

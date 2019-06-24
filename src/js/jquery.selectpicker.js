@@ -3,22 +3,21 @@
     $.expr[":"].searchableSelectContains = $.expr.createPseudo(function (arg) {
         // https://github.com/jquery/sizzle/wiki#extension-api
         var reg = new RegExp(arg, 'gim');
+        var isFirstMatch = true;
         return function (elem, context, isXml) {
             var element = $(elem);
             if (arg === '') {
-                var hasSpan = $(context)
-                    .find('.searchable-select-item .red-font');
-                /*hasSpan.each(function () {
-                    var parent = $(this).parent();
-                    parent.html(parent.data('text'));
-                });*/
-                for (var i = 0, len = hasSpan.length; i < len; i++) {
-                    var parent = $(hasSpan).eq(i).parent();
-                    parent.html(parent.data('text'));
+                if (isFirstMatch) {
+                    var hasSpan = $(context)
+                        .find('.searchable-select-item .red-font');
+                    for (var i = 0, len = hasSpan.length; i < len; i++) {
+                        var parent = $(hasSpan).eq(i).parent();
+                        parent.html(parent.data('text'));
+                    }
+                    isFirstMatch = false;
                 }
                 return true;
-            }
-            {
+            } else {
                 var isMatch = element
                     .text()
                     .toUpperCase()
@@ -28,6 +27,7 @@
                         .html(element.text()
                             .replace(reg, '<span class="red-font" style="color:red;">$&</span>'));
                 }
+                isFirstMatch = true;
                 return isMatch >= 0;
             }
         };
@@ -73,7 +73,7 @@
         });
         var action = this.debounce(_this.debounceFilter, _this, 1000);
 
-        this.input.on('keyup', action)
+        this.input.on('keyup', action);
     };
     var $sp = $.selectpicker;
     $sp.fn = $sp.prototype;
@@ -141,12 +141,12 @@
             this.items.empty();
             var optionHtml = '';
             var selectOption = undefined;
-            var options = this.element.find('option');
             this.element.find('option').each(function () {
-                optionHtml += '<div class="searchable-select-item" data-text="' + $(this).text() + '" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>';
+                var itemStr = '<div class="searchable-select-item" data-text="' + $(this).text() + '" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>';
+                optionHtml += itemStr;
                 //获取当前选中的option
                 if (this.selected) {
-                    selectOption = $('<div class="searchable-select-item" data-text="' + $(this).text() + '" data-value="' + $(this).attr('value') + '">' + $(this).text() + '</div>');
+                    selectOption = $(itemStr);
                 }
             });
             this.items
@@ -225,9 +225,10 @@
         },
         //翻页
         pageTurn: function (isNext) {
-            if (isNext && this.options.data.page < this.options.totalPage) {
+            if (isNext
+                && this.options.data.page < this.options.totalPage) {
                 this.options.data.page++;
-                this.remoteSearch()
+                this.remoteSearch();
             }
             if (!isNext
                 && this.options.data.page < this.options.totalPage
